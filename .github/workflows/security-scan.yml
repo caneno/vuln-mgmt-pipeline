@@ -1,0 +1,40 @@
+name: security-scan
+on:
+  pull_request:
+    push:
+      branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubutnu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Pythong
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.55.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.55.0_Linux-64bit.deb
+
+      - name: Build demo image
+        run: docker build -t vuln-nginx:demo docker/vulnerable-nginx
+
+      - name: Scan with Trivy (JSON)
+        run: |
+          mkdir -p reports
+          trivy image --format json -o reports/trivy.json vuln-nginx:demo
+
+      - name: Policy gate
+        run: python3 scripts/policy_gate.py
+
+      - name: Upload report
+        used: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: reports/trivy.json
