@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess, sys
 
-max_cvss = float(subprocess.check_output(["python3","./cvss_max.py"]).decode().strip())
+max_cvss = float(subprocess.check_output(["python3","cvss_max.py"]).decode().strip())
 
 def estimate_epss(cvss):
     if cvss >= 9.0: return .07
