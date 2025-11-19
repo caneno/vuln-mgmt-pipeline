@@ -2,7 +2,7 @@
 import json, sys
 from pathlib import Path
 
-data = json.loads(Path("./vuln-mgmt-pipeline/docker/vulnerable-nginx/reports/trivy.json").read_text())
+data = json.loads(Path("../docker/vulnerable-nginx/reports/trivy.json").read_text())
 max_cvss = 0.0
 
 for results in data.get("Results", []):
