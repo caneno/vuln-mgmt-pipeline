@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 import subprocess, sys
+from pathlib import Path
 
-max_cvss = float(subprocess.check_output(["python3","/root/code/vuln-mgmt-pipeline/scripts/cvss_max.py"]).decode().strip())
+CVSS_SCRIPT = Path(__file__).resolve().parent / "cvss_max.py"
+
+output = subprocess.check_output(
+    [sys.executable, str(CVSS_SCRIPT)],
+    text=True,
+).strip()
+
+max_cvss = float(output)
 
 def estimate_epss(cvss):
     if cvss >= 9.0: return .07

@@ -2,7 +2,14 @@
 import json, sys
 from pathlib import Path
 
-data = json.loads(Path("/root/code/vuln-mgmt-pipeline/docker/vulnerable-nginx/reports/trivy.json").read_text())
+BASE_DIR = Path(__file__).resolve().parents[1]
+REPORT_PATH = BASE_DIR / "docker" / "vulnerable-nginx" / "reports" / "trivy.json"
+
+if not REPORT_PATH.is_file():
+    print(f"Error: Trivy report not found at {REPORT_PATH}", file=sys.stderr)
+    sys.exit(1)
+
+data = json.loads(REPORT_PATH.read_text())
 max_cvss = 0.0
 
 for results in data.get("Results", []):
