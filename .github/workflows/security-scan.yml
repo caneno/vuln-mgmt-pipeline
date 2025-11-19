@@ -1,16 +1,17 @@
 name: security-scan
 on:
+  push:
+    branches: [main]
   pull_request:
-    push:
       branches: [main]
 
 jobs:
   scan:
-    runs-on: ubutnu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Pythong
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
